@@ -1,0 +1,133 @@
+﻿/*
+ *Marks Management System with Git
+a) Develop a Student Marks Management System using Git.
+b) In this system, a central database stores students' marks for different subjects in a tabular format.
+c) Subject teachers can update marks as needed before the final submission.
+d) Teachers can view student names and roll numbers but only edit the marks for their subject.
+e) When all teachers have completed their updates, the database is sorted by total marks and made available for students to view. 
+ */
+
+
+
+
+import java.util.*;
+
+
+public class StudentMarksManagementSystem {
+    private Map<String, Map<String, Integer>> studentMarks; // Database to store student marks
+
+
+    public StudentMarksManagementSystem() {
+        this.studentMarks = new HashMap<>();
+    }
+
+
+    // Method for subject teachers to update marks
+    public void updateMarks(String rollNumber, String subject, int newMarks) {
+        if (!studentMarks.containsKey(rollNumber)) {
+            System.out.println("Student not found with roll number: " + rollNumber);
+            return;
+        }
+
+
+        Map<String, Integer> marksMap = studentMarks.get(rollNumber);
+        if (!marksMap.containsKey(subject)) {
+            System.out.println("Subject not found for the student: " + subject);
+            return;
+        }
+
+
+        int oldMarks = marksMap.get(subject);
+        marksMap.put(subject, newMarks);
+
+
+        System.out.println("Marks updated successfully for " + subject + " for student with roll number " + rollNumber);
+        System.out.println("Old " + subject + " marks: " + oldMarks);
+        System.out.println("Updated " + subject + " marks: " + newMarks);
+    }
+
+
+    // Method for teachers to view student names and roll numbers
+    public void viewStudents() {
+        System.out.println("Students Roll Numbers:");
+        for (String rollNumber : studentMarks.keySet()) {
+            System.out.println("Roll Number: " + rollNumber);
+            // Add logic to fetch student name from database if available
+        }
+    }
+
+
+    // Method to sort students by total marks
+    public List<String> sortStudentsByTotalMarks() {
+        List<Map.Entry<String, Integer>> totalMarksList = new ArrayList<>();
+
+
+        // Calculate total marks for each student
+        for (Map.Entry<String, Map<String, Integer>> entry : studentMarks.entrySet()) {
+            int totalMarks = entry.getValue().values().stream().mapToInt(Integer::intValue).sum();
+            totalMarksList.add(new AbstractMap.SimpleEntry<>(entry.getKey(), totalMarks));
+        }
+
+
+        // Sort students by total marks
+        totalMarksList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+
+        // Return sorted list of student roll numbers
+        List<String> sortedStudents = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : totalMarksList) {
+            sortedStudents.add(entry.getKey());
+        }
+        return sortedStudents;
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentMarksManagementSystem marksSystem = new StudentMarksManagementSystem();
+
+
+        // Example usage
+        marksSystem.studentMarks.put("101", new HashMap<>()); // Student with roll number 101
+        marksSystem.studentMarks.get("101").put("Maths", 85); // Marks for Maths subject
+        marksSystem.studentMarks.get("101").put("Science", 90); // Marks for Science subject
+        marksSystem.studentMarks.put("102", new HashMap<>()); // Student with roll number 101
+        marksSystem.studentMarks.get("102").put("Maths", 80); // Marks for Maths subject
+        marksSystem.studentMarks.get("102").put("Science", 97); // Marks for Science subject
+        marksSystem.studentMarks.put("103", new HashMap<>()); // Student with roll number 101
+        marksSystem.studentMarks.get("103").put("Maths", 76); // Marks for Maths subject
+        marksSystem.studentMarks.get("103").put("Science", 63); // Marks for Science subject
+        marksSystem.studentMarks.put("104", new HashMap<>()); // Student with roll number 101
+        marksSystem.studentMarks.get("104").put("Maths", 84); // Marks for Maths subject
+        marksSystem.studentMarks.get("104").put("Science", 100); // Marks for Science subject
+
+
+        marksSystem.viewStudents();
+
+
+        System.out.println("Enter student roll number to update marks:");
+        String rollNumber = scanner.nextLine();
+
+
+        System.out.println("Enter subject to update marks:");
+        String subject = scanner.nextLine();
+
+
+        System.out.println("Enter new marks:");
+        int newMarks = scanner.nextInt();
+
+
+        marksSystem.updateMarks(rollNumber, subject, newMarks);
+
+
+        marksSystem.viewStudents();
+
+
+        // Sorting students by total marks
+        List<String> sortedStudents = marksSystem.sortStudentsByTotalMarks();
+        System.out.println("Students sorted by total marks:");
+        for (String student : sortedStudents) {
+            System.out.println("Roll Number: " + student);
+        }
+    }
+}

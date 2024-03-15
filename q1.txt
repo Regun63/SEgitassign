@@ -1,0 +1,156 @@
+﻿/*  Inventory Management System with Git
+a) Design a system to manage products for a store. Customers can make purchases, and sellers can update the list of products. 
+b) Use Git for version control, and maintain a purchase history of items.
+*/
+import java.util.*;
+
+
+class Product {
+    private String name;
+    private double price;
+    private int quantity;
+
+
+    public Product(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public double getPrice() {
+        return price;
+    }
+
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
+
+
+class InventoryManagementSystem {
+    private List<Product> productList;
+    private List<String> purchaseHistory;
+
+
+    public InventoryManagementSystem() {
+        this.productList = new ArrayList<>();
+        this.purchaseHistory = new ArrayList<>();
+    }
+
+
+    public void addProduct(Product product) {
+        productList.add(product);
+    }
+
+
+    public void updateProduct(String name, int quantity) {
+        for (Product product : productList) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                int previousQuantity = product.getQuantity();
+                product.setQuantity(quantity);
+                System.out.println("Product '" + name + "' updated successfully. Previous quantity: " + previousQuantity);
+                return;
+            }
+        }
+        System.out.println("Product not found!");
+    }
+
+
+    public void makePurchase(String name, int quantity) {
+        for (Product product : productList) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                if (product.getQuantity() >= quantity) {
+                    product.setQuantity(product.getQuantity() - quantity);
+                    purchaseHistory.add("Purchased " + quantity + " units of " + name);
+                    System.out.println("Purchase successful!");
+                } else {
+                    System.out.println("Insufficient quantity available!");
+                }
+                return;
+            }
+        }
+        System.out.println("Product not found!");
+    }
+
+
+    public void displayProducts() {
+        System.out.println("Product Inventory:");
+        for (Product product : productList) {
+            System.out.println("Name: " + product.getName() +
+                    ", Price: $" + product.getPrice() +
+                    ", Quantity: " + product.getQuantity());
+        }
+    }
+
+
+    public void displayPurchaseHistory() {
+        System.out.println("Purchase History:");
+        for (String purchase : purchaseHistory) {
+            System.out.println(purchase);
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        InventoryManagementSystem ims = new InventoryManagementSystem();
+
+
+        // Add some initial products to the inventory
+        ims.addProduct(new Product("Laptop", 999.99, 10));
+        ims.addProduct(new Product("Smartphone", 599.99, 20));
+        ims.addProduct(new Product("Tablet", 299.99, 15));
+
+
+        while (true) {
+            System.out.println("\n1. Display Products\n2. Update Product\n3. Make Purchase\n4. Display Purchase History\n5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+
+            switch (choice) {
+                case 1:
+                    ims.displayProducts();
+                    break;
+                case 2:
+                    System.out.print("Enter product name to update: ");
+                    String updateName = scanner.nextLine();
+                    System.out.print("Enter new quantity: ");
+                    int updateQuantity = scanner.nextInt();
+                    ims.updateProduct(updateName, updateQuantity);
+                    break;
+                case 3:
+                    System.out.print("Enter product name to purchase: ");
+                    String purchaseName = scanner.nextLine();
+                    System.out.print("Enter quantity to purchase: ");
+                    int purchaseQuantity = scanner.nextInt();
+                    ims.makePurchase(purchaseName, purchaseQuantity);
+                    break;
+                case 4:
+                    ims.displayPurchaseHistory();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}
