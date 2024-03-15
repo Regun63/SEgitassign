@@ -106,7 +106,8 @@ static void saveTasks(ArrayList<Task> tasks, String filename) {
  System.out.print("Enter task description: ");
                     String description = scanner.nextLine();
                     addTask(tasks, description);
-                                                     case 3:
+               break;
+                  case 3:
                     System.out.print("Enter task index to edit: ");
                     int taskIndexEdit = scanner.nextInt() - 1;
                     scanner.nextLine();
@@ -129,6 +130,10 @@ static void saveTasks(ArrayList<Task> tasks, String filename) {
               System.out.print("Enter task index to delete . ");
         int taskIndexDelete = scanner.nextInt() - 1;
                     deleteTask( tasks,taskIndexDelete);
+               case 7:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
